@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+   <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+   <script>
+      // position of snake tail
+      let px = 10;
+      let py = 10;
+
+      // sizes
+      let gridSize = 20;
+      let tileCount = 20;
+
+      // position of apple
+      let ax = 15;
+      let ay = 15;
+
+      // velocity of snake
+      let vx = 0;
+      let vy = 0;
+
+      let trail = [];
+      let tail = 5;
+
+      let applesEaten = 0;
+      let showGameOver = false;
+
+      window.onload = function() {
+         canvas = document.getElementById("gameCanvas");
+         ctx = canvas.getContext("2d");
+
+         document.addEventListener('mousedown', handleMouseClick);
+         document.addEventListener('keydown', onKeyPress);
+         setInterval(game, 100);
+      }
+
+      function handleMouseClick(evt) {
+         if (showGameOver) {
+            trail = [];
+            tail = 5;
+            px = 10;
+            py = 10;
+            showGameOver = false;
+         }
+      }
+
+      function drawCanvas() {
+         ctx.fillStyle = 'black';
+         ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function drawSnake() {
+         ctx.fillStyle = 'lime';
+         for (let i = 0; i < trail.length; i++) {
+            ctx.fillRect(trail[i].x * gridSize, trail[i].y * gridSize,
+                        gridSize - 2, gridSize - 2);
+            if (trail[i].x == px && trail[i].y == py) {
+               tail = 5;
+               applesEaten = 0;
+            }
+         }
+      }
+
+      function moveSnake() {
+         trail.push({x:px, y:py});
+         while (trail.length > tail) {
+            trail.shift();
+         }
+      }
+
+      function eat() {
+         if (ax == px && ay == py) {
+            tail++;
+            applesEaten++;
+            ax = Math.floor(Math.random() * tileCount);
+            ay = Math.floor(Math.random() * tileCount);
+         }
+      }
+
+      function drawApple() {
+         ctx.fillStyle = 'red';
+         ctx.fillRect(ax * gridSize, ay * gridSize, gridSize - 2, gridSize - 2);
+      }
+
+      function gameOver() {
+         ctx.fillStyle = 'white';
+         ctx.font = "20px Courier New";
+         ctx.fillText("game over!", 150, 100);
+         ctx.fillText("click to continue", 100, 150);
+         showGameOver = true;
+      }
+
+      function drawScores() {
+         ctx.fillStyle = 'white';
+         ctx.font = "20px Courier New";
+         ctx.fillText(applesEaten, 5, 20);
+      }
+
+      function game() {
+         drawCanvas();
+         px += vx;
+         py += vy;
+         if (px < 0 || px > tileCount) {
+            gameOver();
+            return;
+         }
+         if (py < 0 || py > tileCount) {
+            gameOver();
+            return;
+         }
+         drawScores();
+         drawSnake();
+         moveSnake();
+         eat();
+         drawApple();
+      }
+
+      function onKeyPress(evt) {
+         if (evt.keyCode == 37) { // left
+            vx = -1;
+            vy = 0;
+         } else if (evt.keyCode == 38) { // up
+            vx = 0;
+            vy = -1;
+         } else if (evt.keyCode == 39) { // right
+            vx = 1;
+            vy = 0;
+         } else if (evt.keyCode == 40) { // down
+            vx = 0;
+            vy = 1;
+         }
+      }
+   </script>
+</html>

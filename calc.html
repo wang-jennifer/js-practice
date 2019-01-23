@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="description" content="This is an example of calculator">
+      <title></title>
+
+      <style>
+         body {
+            font: 12pt Helvetica;
+            font-weight: bold;
+            color: white;
+         }
+
+         #container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+         }
+
+         .wrap {
+            background: black;
+            padding: 50px;
+         }
+
+         #value1, #value2, #operator {
+            width: 200px;
+            background: none;
+            border: none;
+            outline: none;
+            font: 30pt Helvetica;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+         }
+
+         select {
+            outline: none;
+            background: none;
+            border: none;
+            text-align: center;
+         }
+
+         button {
+            background: none;
+            outline: none;
+            border: none;
+            font: 20pt Helvetica;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+         }
+
+         button:hover {
+            color: #a079aa;
+         }
+
+         #result {
+            z-index: -1;
+            color: black;
+            font: 50pt Helvetica;
+            font-weight: bold;
+            text-shadow: 3px 3px #a079aa;
+            position: absolute;
+            margin-top: -75px;
+         }
+      </style>
+
+   </head>
+
+   <body>
+      <div id="container">
+         <div id="result"></div>
+         <div class="wrap">
+            <form>
+               <input type="text" id="value1" placeholder="number">
+               <p></p>
+               <input type="text" id="operator" placeholder="operator">
+               <p></p>
+               <input type="text" id="value2" placeholder="number">
+               <p></p>
+               <button type="button" onclick="calc()">Calculate</button>
+            </form>
+         </div>
+      </div>
+   </body>
+   <script src="main.js"></script> <!--javascript-->
+</html>

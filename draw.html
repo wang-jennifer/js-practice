@@ -1,0 +1,147 @@
+<!-- cool things to add:
+once food score reaches a certain number, offer selection of colors
+for new fish (this'll be hard lol) -->
+
+<!DOCTYPE html>
+ <html>
+   <head>
+      <canvas id="dr" width="400" height="400"></canvas>
+      <style>
+         canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 10%;
+         }
+
+         .info {
+            position: absolute;
+            margin-top: -220px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font: 25px Courier New;
+            color: #339999;
+         }
+
+         .title {
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font: 70px Courier New;
+            font-weight: bold;
+            color: #339999;
+         }
+      </style>
+   </head>
+
+   <body>
+      <div class="info">press enter to quit</div>
+      <div class="title">my pond.</div>
+      <script>
+         let canvas;
+         let ctx;
+
+         // fish
+         let fx = Math.random() * 300;
+         let fy = Math.random() * 300;
+         let fvx = 3;
+         let fvy = 1;
+
+         let px = 0;
+         let py = 0;
+
+         let path = []; // array of point objects
+         let amountEaten = 0;
+         let quit = false;
+
+         window.onload = function() {
+            canvas = document.getElementById("dr");
+            ctx = canvas.getContext("2d");
+
+            document.addEventListener('mousedown', mouseClick);
+            document.addEventListener('keydown', keyPress);
+            document.addEventListener('mousemove', mousePos);
+            setInterval(update, 10);
+         }
+
+         function mouseClick(e) {
+            path.push({x:px, y:py});
+         }
+
+         function mousePos(e) {
+            let rect = canvas.getBoundingClientRect();
+            let root = document.documentElement;
+            let mouseX = e.clientX - rect.left - root.scrollLeft;
+            let mouseY = e.clientY - rect.top - root.scrollTop;
+            px = mouseX - 5;
+            py = mouseY - 5;
+         }
+
+         function keyPress(e) {
+            if (e.keyCode == 13) { // enter button
+               quit = true;
+            } else if (e.keyCode == 32) { // space bar
+               path = [];
+               amountEaten = 0;
+               quit = false;
+            }
+         }
+
+         function drawFish() {
+            ctx.fillStyle = "LightCoral";
+            ctx.beginPath();
+            ctx.arc(fx, fy, 15, 0, Math.PI * 2, true);
+            ctx.fill();
+         }
+
+         function moveFish() {
+            fx += fvx;
+            fy += fvy;
+            if (fx < 0 || fx > canvas.width) {
+               fvx = -fvx;
+            }
+            if (fy < 0 || fy > canvas.height) {
+               fvy = -fvy;
+            }
+            drawFish();
+         }
+
+         function trackEaten() {
+            ctx.fillStyle = "#339999";
+            ctx.font = "25px Courier New";
+            ctx.fillText(amountEaten, 15, 35);
+         }
+
+         function printQuitMsg() {
+            ctx.fillStyle = "#339999";
+            ctx.font = "25px Courier New";
+            ctx.fillText("press space", 120, 170);
+            ctx.fillText("to restart", 125, 210);
+         }
+
+         function update() {
+            ctx.fillStyle = "LightBlue";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (quit) {
+               printQuitMsg();
+               return;
+            }
+            ctx.fillStyle = "BurlyWood";
+            for (let i = 0; i < path.length; i++) {
+               ctx.fillRect(path[i].x, path[i].y, 10, 10);
+               ctx.strokeStyle = "#c59a58";
+               ctx.strokeRect(path[i].x, path[i].y, 10, 10);
+               if (Math.abs(fx - path[i].x) < 15 && Math.abs(fy - path[i].y) < 15) {
+                  path.splice(i, 1);
+                  amountEaten++;
+               }
+            }
+            moveFish();
+            trackEaten();
+         }
+      </script>
+   </body>
+ </html>
